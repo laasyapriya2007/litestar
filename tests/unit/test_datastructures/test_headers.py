@@ -214,6 +214,29 @@ def test_mutable_scope_headers_from_tuple_setitem_existing_key(
     assert list(raw_headers_tuple) == [(b"foo", b"baz")]
 
 
+def test_mutable_scope_headers_setitem_three_duplicate_headers() -> None:
+    raw_headers: RawHeadersList = [
+        (b"foo", b"bar"),
+        (b"foo", b"baz"),
+        (b"foo", b"qux"),
+    ]
+    headers = MutableScopeHeaders({"headers": raw_headers})
+
+    headers["Foo"] = "baz"
+
+    assert raw_headers == [(b"foo", b"baz")]
+
+
+def test_mutable_scope_headers_setitem_duplicate_headers_keeps_unrelated_headers(
+    raw_headers: "RawHeadersList", mutable_headers: MutableScopeHeaders
+) -> None:
+    raw_headers.extend([(b"foo", b"baz"), (b"unrelated", b"value"), (b"foo", b"qux")])
+
+    mutable_headers["FOO"] = "baz"
+
+    assert raw_headers == [(b"foo", b"baz"), (b"unrelated", b"value")]
+
+
 def test_mutable_scope_headers_setitem_new_key(
     raw_headers: "RawHeadersList", mutable_headers: MutableScopeHeaders
 ) -> None:

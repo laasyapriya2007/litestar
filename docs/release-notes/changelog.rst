@@ -6,6 +6,15 @@
 .. changelog:: 3.0.0
     :date: 2364-01-27
 
+    .. change:: Fix ``MutableScopeHeaders.__setitem__`` with duplicate headers
+        :type: bugfix
+        :pr: XXXX
+
+        Fix an ``IndexError`` (or unrelated headers being dropped) in
+        ``MutableScopeHeaders.__setitem__`` when replacing a header that occurs three or more
+        times in the scope. Subsequent duplicate occurrences are now removed in reverse index
+        order, updating the first occurrence in place while preserving all unrelated headers.
+
     .. change:: Remove support for trio
         :type: feature
         :breaking:
